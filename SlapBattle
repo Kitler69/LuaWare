@@ -1,0 +1,158 @@
+getgenv().KillAura = false;
+getgenv().NoFall = false;
+getgenv().walkspeed = 16;
+getgenv().jumppower = 50;
+getgenv().jp = false;
+getgenv().ws = false;
+
+local plr = game:GetService('Players').LocalPlayer
+local players = game:GetService('Players')
+local RunService = game:GetService('RunService')
+
+----///Game Bypasser///----
+local hook; hook = hookmetamethod(game, "__namecall", function(...)
+    local Method = getnamecallmethod()
+    local Remote = tostring(...)
+   
+    if Method == "FireServer" and Remote == "WalkSpeedChanged" then
+        return nil
+        elseif Method == 'FireServer' and Remote == 'Ban' then
+        return nil
+        elseif Method == 'FireServer' and Remote == 'AdminGUI' then
+        return nil
+    end
+    return hook(...)
+end)
+
+
+---///Functions///---------
+local function KillAura()
+        while getgenv().KillAura and task.wait() do
+            for _,v in pairs(players:GetPlayers()) do
+                if v.Character then
+                game:GetService("ReplicatedStorage"):WaitForChild("b"):FireServer(v.Character:FindFirstChild('HumanoidRootPart'))
+            end
+            RunService.Heartbeat:Wait()
+        end
+    end
+end
+local function tab()
+    local a = Instance.new('Part')
+    a.Parent = workspace.Arena["main island"]
+    a.Name = 'GetFucked'
+    a.Size = Vector3.new(999999999,1,999999999)
+    a.Anchored = true
+    a.Position = Vector3.new(-4.08817, -9, 1.83554 )
+    a.Material = Enum.Material.Glass
+    a.Transparency = 0.5
+end
+
+local function WS()
+    while task.wait() and plr.Character do
+    if getgenv().ws then
+        plr.Character.Humanoid.WalkSpeed = getgenv().walkspeed
+    else
+        plr.Character.Humanoid.WalkSpeed = 16
+    end
+    RunService.Heartbeat:Wait()
+    end
+end
+local function JP()
+    while task.wait() and plr.Character do
+    if getgenv().jp then
+        plr.Character.Humanoid.JumpPower = getgenv().jumppower
+    else
+        plr.Character.Humanoid.JumpPower = 50
+    end
+    RunService.Heartbeat:Wait()
+    end
+end
+--simple bypass ws and jp
+local function Speed()
+    local gmt = getrawmetatable(game)
+    setreadonly(gmt,false)
+    local oldindex = gmt.__index
+    gmt.__index = newcclosure(function(self,b)
+    if b == "WalkSpeed" then
+    return 16
+    end
+    return oldindex(self,b)
+end)
+end
+local function Jump()
+    local gmt = getrawmetatable(game)
+    setreadonly(gmt,false)
+    local oldindex = gmt.__index
+    gmt.__index = newcclosure(function(self,b)
+    if b == "JumpPower" then
+    return 50
+    end
+    return oldindex(self,b)
+end)
+end
+
+
+
+
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/cat"))() --you can go into the github link and copy all of it and modify it for yourself.
+local Window = Library:CreateWindow("LuaWare", Vector2.new(492, 598), Enum.KeyCode.RightControl) --you can change your UI keybind
+
+local MainTab = Window:CreateTab('Main')
+
+local MainSection = MainTab:CreateSector("Main", "left")
+
+MainSection:AddToggle("Slap Aura", false, function(w)
+    getgenv().KillAura = w
+    if w then
+        KillAura()
+    end
+end)
+
+MainSection:AddToggle("Anti Void", false, function(w)
+    getgenv().NoFall = w
+    if getgenv().NoFall then
+    for _,v in pairs(workspace.Arena["main island"]:GetChildren()) do
+        if v.Name == 'GetFucked' then
+            v:Destroy()
+        end
+    end
+    tab()
+    else
+    for _,v in pairs(workspace.Arena["main island"]:GetChildren()) do
+        if v.Name == 'GetFucked' then
+            v:Destroy()
+        end
+    end
+end
+end)
+
+MainSection:AddButton("No Cube Of Death", function()
+    game:GetService("Workspace").Arena.CubeOfDeathArea:Destroy()
+end)
+
+local PlayerSection = MainTab:CreateSector("Players", "right")
+
+PlayerSection:AddToggle("Speed Hack", false, function(w)
+    getgenv().ws = w
+    if w then
+        WS()
+        Speed()
+    end
+end)
+
+PlayerSection:AddSlider("Speed Modifier", 16, 20, 80, 1, function(w)
+    getgenv().walkspeed = w
+end)
+
+PlayerSection:AddToggle("Jump Hack", false, function(f)
+    getgenv().jp = f
+    if f then
+        JP()
+        Jump()
+    end
+end)
+
+PlayerSection:AddSlider("Jump Modifier", 50, 80, 150, 1, function(g)
+    getgenv().jumppower = g
+end)
