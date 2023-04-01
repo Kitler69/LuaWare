@@ -8,7 +8,7 @@ getgenv().ws = false;
 local plr = game:GetService('Players').LocalPlayer
 local players = game:GetService('Players')
 local RunService = game:GetService('RunService')
-
+local chr = plr.Character or plr.CharacterAdded:Wait()
 ----///Game Bypasser///----
 local hook; hook = hookmetamethod(game, "__namecall", function(...)
     local Method = getnamecallmethod()
@@ -48,21 +48,21 @@ local function tab()
 end
 
 local function WS()
-    while task.wait() and plr.Character do
+    while task.wait() and chr do
     if getgenv().ws then
-        plr.Character.Humanoid.WalkSpeed = getgenv().walkspeed
+        chr.Humanoid.WalkSpeed = getgenv().walkspeed
     else
-        plr.Character.Humanoid.WalkSpeed = 16
+        chr.Humanoid.WalkSpeed = 16
     end
     RunService.Heartbeat:Wait()
     end
 end
 local function JP()
-    while task.wait() and plr.Character do
+    while task.wait() and chr do
     if getgenv().jp then
-        plr.Character.Humanoid.JumpPower = getgenv().jumppower
+        chr.Humanoid.JumpPower = getgenv().jumppower
     else
-        plr.Character.Humanoid.JumpPower = 50
+        chr.Humanoid.JumpPower = 50
     end
     RunService.Heartbeat:Wait()
     end
